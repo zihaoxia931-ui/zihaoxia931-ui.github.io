@@ -125,6 +125,16 @@ const japaneseCaseTitles = {
   28: "時思剣鳴", 29: "実写とバーチャルを融合した映像制作", 30: "映像制作アセット",
 };
 
+const japaneseCaseUrls = {
+  4: "https://www.youtube.com/watch?v=9LV8MSRqtgQ",
+  7: "https://www.youtube.com/watch?v=ZKOEMbgXVBw",
+  8: "https://www.youtube.com/watch?v=FdPJfP5Mg3k",
+  9: "https://www.youtube.com/watch?v=mVEpX7sBWaQ",
+  12: "https://www.youtube.com/watch?v=Pyem9ov7igY",
+  14: "https://www.youtube.com/watch?v=4R8wNgoPO1g",
+  15: "https://www.youtube.com/watch?v=YMCoDmf0o2U",
+};
+
 const localizedCategories = { en: englishCategories, ja: japaneseCategories };
 const localizedCaseTitles = { en: englishCaseTitles, ja: japaneseCaseTitles };
 
@@ -200,6 +210,7 @@ const phrase = key => copy[language][key];
 const categoryName = category => language === "zh" ? category.name : localizedCategories[language][category.slug][0];
 const categorySummary = category => language === "zh" ? category.summary : localizedCategories[language][category.slug][1];
 const caseTitle = item => language === "zh" ? item[1] : localizedCaseTitles[language][item[0]];
+const caseUrl = item => language === "ja" ? japaneseCaseUrls[item[0]] || item[2] : item[2];
 
 const tabs = document.getElementById("category-tabs");
 const categoryOptions = [{ slug: "all", name: "全部案例" }, ...categories];
@@ -321,7 +332,8 @@ heroArt.addEventListener("click", event => {
 }, true);
 
 function cardMarkup(category, item) {
-  const [id, , url] = item;
+  const [id] = item;
+  const url = caseUrl(item);
   const title = caseTitle(item);
   const tag = url ? "a" : "article";
   const destination = url
@@ -382,7 +394,7 @@ function renderCases() {
     card.querySelector("img").src = imagePath(id);
     if (card.tagName === "A") {
       const record = categories.flatMap(category => category.cases).find(item => item[0] === id);
-      card.href = record[2];
+      card.href = caseUrl(record);
     }
   });
 }
